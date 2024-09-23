@@ -9,11 +9,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submit-answer');
     const feedbackEl = document.getElementById('feedback');
     const nextButton = document.getElementById('next-question');
+    const timerEl = document.createElement('p');
 
     let numbers = [];
     let currentIndex = 0;
     let tableNumber = 1;
     let wrongAnswers = [];
+    let timer;
+    let timeLeft = 60; // 60 seconds
+
+    questionContainer.insertBefore(timerEl, questionEl); // Add timer display above the question
+
+    function startTimer() {
+        timerEl.textContent = `Time left: ${timeLeft} seconds`;
+        timer = setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = `Time left: ${timeLeft} seconds`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                endQuiz();
+            }
+        }, 1000);
+    }
 
     function askQuestion() {
         const currentQuestion = numbers[currentIndex];
@@ -63,12 +81,20 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.style.display = 'inline';
             nextButton.style.display = 'none';
         } else {
-            feedbackEl.textContent = 'Great job! You answered all questions correctly!';
-            questionEl.textContent = '';
-            answerInput.style.display = 'none';
-            submitButton.style.display = 'none';
-            nextButton.style.display = 'none';
+            endQuiz();
         }
+    }
+
+    function endQuiz() {
+        clearInterval(timer);
+        feedbackEl.textContent = timeLeft <= 0
+            ? 'Your time is up, you need to be faster next time!'
+            : 'Great job! You answered all questions correctly!';
+        questionEl.textContent = '';
+        answerInput.style.display = 'none';
+        submitButton.style.display = 'none';
+        nextButton.style.display = 'none';
+        timerEl.style.display = 'none';
     }
 
     startQuizButton.addEventListener('click', () => {
@@ -81,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setupContainer.style.display = 'none';
             questionContainer.style.display = 'block';
 
+            startTimer();
             askQuestion();
         } else {
             alert('Please enter a number between 1 and 9.');
