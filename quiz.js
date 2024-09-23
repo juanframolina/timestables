@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let numbers = [];
     let currentIndex = 0;
     let tableNumber = 1;
+    let wrongAnswers = [];
 
     function askQuestion() {
         const currentQuestion = numbers[currentIndex];
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             feedbackEl.textContent = `Wrong! The correct answer is ${correctAnswer}.`;
             feedbackEl.style.color = 'red';
+            wrongAnswers.push(numbers[currentIndex]);
         }
         submitButton.style.display = 'none';
         nextButton.style.display = 'inline';
@@ -50,8 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackEl.textContent = '';
             submitButton.style.display = 'inline';
             nextButton.style.display = 'none';
+        } else if (wrongAnswers.length > 0) {
+            // Re-ask wrong answers
+            numbers = wrongAnswers;
+            wrongAnswers = [];
+            currentIndex = 0;
+            shuffle(numbers);
+            askQuestion();
+            feedbackEl.textContent = '';
+            submitButton.style.display = 'inline';
+            nextButton.style.display = 'none';
         } else {
-            feedbackEl.textContent = 'Great job! You answered all questions!';
+            feedbackEl.textContent = 'Great job! You answered all questions correctly!';
             questionEl.textContent = '';
             answerInput.style.display = 'none';
             submitButton.style.display = 'none';
