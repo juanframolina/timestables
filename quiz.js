@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackEl = document.getElementById('feedback');
     const nextButton = document.getElementById('next-question');
     const timerEl = document.createElement('p');
+    const logEl = document.createElement('div'); // Element to display log
 
     let numbers = [];
     let currentIndex = 0;
@@ -19,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let timeLeft = 90; // 90 seconds
 
     questionContainer.insertBefore(timerEl, questionEl); // Add timer display above the question
+    questionContainer.appendChild(logEl); // Add log display below the questions
+    logEl.style.marginTop = '20px'; // Styling for log display
 
     function startTimer() {
         timerEl.textContent = `Time left: ${timeLeft} seconds`;
@@ -61,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             feedbackEl.textContent = `Wrong! The correct answer is ${correctAnswer}.`;
             feedbackEl.style.color = 'red';
-            wrongAnswers.push(numbers[currentIndex]);
+            wrongAnswers.push(`${tableNumber} x ${numbers[currentIndex]} = ${correctAnswer}`); // Log incorrect answer
         }
         submitButton.style.display = 'none';
         nextButton.style.display = 'inline';
@@ -76,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nextButton.style.display = 'none';
         } else if (wrongAnswers.length > 0) {
             // Re-ask wrong answers
-            numbers = wrongAnswers;
+            numbers = wrongAnswers.map(answer => parseInt(answer.split(' ')[2], 10)); // Extract the questions from wrong answers
             wrongAnswers = [];
             currentIndex = 0;
             shuffle(numbers);
@@ -99,6 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
         submitButton.style.display = 'none';
         nextButton.style.display = 'none';
         timerEl.style.display = 'none';
+
+        // Log results
+        const logTime = new Date().toLocaleString();
+        logEl.innerHTML = `<strong>Quiz Completed:</strong> ${logTime}<br>`;
+        if (wrongAnswers.length > 0) {
+            logEl.innerHTML += `<strong>Wrong Answers:</strong> <br>${wrongAnswers.join('<br>')}`;
+        } else {
+            logEl.innerHTML += `<strong>No wrong answers!</strong>`;
+        }
     }
 
     startQuizButton.addEventListener('click', () => {
