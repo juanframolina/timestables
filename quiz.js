@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let tableNumber = 1;
     let wrongAnswers = [];
     let timer;
-    let timeLeft = 60; // 60 seconds
+    let timeLeft = 90; // 90 seconds
 
     questionContainer.insertBefore(timerEl, questionEl); // Add timer display above the question
 
