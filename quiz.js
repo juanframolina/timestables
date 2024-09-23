@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
             timeLeft--;
             timerEl.textContent = `Time left: ${timeLeft} seconds`;
 
+            if (timeLeft <= 30) {
+                timerEl.style.color = 'red'; // Change to red when 30 seconds are left
+            }
+
             if (timeLeft <= 0) {
                 clearInterval(timer);
                 endQuiz();
