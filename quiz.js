@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const numbers = [...Array(12).keys()].map(i => i + 1);
-    shuffle(numbers);
-    let currentIndex = 0;
-    let currentQuestion = numbers[currentIndex];
+    const setupContainer = document.getElementById('setup-container');
+    const questionContainer = document.getElementById('question-container');
+    const tableNumberInput = document.getElementById('table-number');
+    const startQuizButton = document.getElementById('start-quiz');
 
     const questionEl = document.getElementById('question');
     const answerInput = document.getElementById('answer');
@@ -10,8 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackEl = document.getElementById('feedback');
     const nextButton = document.getElementById('next-question');
 
+    let numbers = [];
+    let currentIndex = 0;
+    let tableNumber = 1;
+
     function askQuestion() {
-        questionEl.textContent = `What is 9 x ${currentQuestion}?`;
+        const currentQuestion = numbers[currentIndex];
+        questionEl.textContent = `What is ${tableNumber} x ${currentQuestion}?`;
         answerInput.value = '';
         answerInput.focus();
     }
@@ -25,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkAnswer() {
         const userAnswer = parseInt(answerInput.value, 10);
-        const correctAnswer = 9 * currentQuestion;
+        const correctAnswer = tableNumber * numbers[currentIndex];
 
         if (userAnswer === correctAnswer) {
             feedbackEl.textContent = 'Correct!';
@@ -41,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function nextQuestion() {
         currentIndex++;
         if (currentIndex < numbers.length) {
-            currentQuestion = numbers[currentIndex];
             askQuestion();
             feedbackEl.textContent = '';
             submitButton.style.display = 'inline';
@@ -55,9 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    startQuizButton.addEventListener('click', () => {
+        tableNumber = parseInt(tableNumberInput.value, 10);
+        if (tableNumber >= 1 && tableNumber <= 9) {
+            numbers = [...Array(12).keys()].map(i => i + 1);
+            shuffle(numbers);
+            currentIndex = 0;
+
+            setupContainer.style.display = 'none';
+            questionContainer.style.display = 'block';
+
+            askQuestion();
+        } else {
+            alert('Please enter a number between 1 and 9.');
+        }
+    });
+
     submitButton.addEventListener('click', checkAnswer);
     nextButton.addEventListener('click', nextQuestion);
-
-    askQuestion();
 });
-
