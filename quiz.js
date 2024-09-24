@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startQuizButton.addEventListener('click', () => {
         tableNumber = parseInt(tableNumberInput.value, 10);
-        if (tableNumber >= 1 && tableNumber <= 9) {
+        if (tableNumber >= 1 && tableNumber <= 12) {
             numbers = [...Array(12).keys()].map(i => i + 1);
             shuffle(numbers);
             currentIndex = 0;
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             startTimer();
             askQuestion();
         } else {
-            alert('Please enter a number between 1 and 9.');
+            alert('Please enter a number between 1 and 12.');
         }
     });
 
